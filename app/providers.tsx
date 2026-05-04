@@ -278,10 +278,13 @@ export function KasamProvider({ children }: { children: React.ReactNode }) {
     })();
   };
 
-  const addExpense = (expense: Expense) => {
-    const tempId = crypto.randomUUID();
-    setExpenses((prev) => [{ ...expense, id: tempId }, ...prev]);
-    void (async () => {
+      const addExpense = (expense: Expense) => {
+        const tempId = crypto.randomUUID();
+        setExpenses((prev) => [{ ...expense, id: tempId }, ...prev]);
+
+        return;
+
+        void (async () => {
       try {
         const { data, error } = await supabase
           .from("expenses")
