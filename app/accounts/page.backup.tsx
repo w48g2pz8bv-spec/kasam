@@ -1,6 +1,5 @@
- "use client";
+"use client";
 
-import Link from "next/link";
 import { useState } from "react";
 import { useKasam } from "../providers";
 import { motion, AnimatePresence } from "framer-motion";
@@ -110,12 +109,12 @@ export default function AccountsPage() {
             setActiveTab(t);
             setType(t);
           }}
-          className={`rounded-3xl border py-4 text-sm font-black transition ${
+          className={`rounded-2xl py-3 text-sm font-black transition ${
             activeTab === t
               ? t === "Alacak"
-                ? "border-emerald-400/40 bg-emerald-400/10 text-emerald-400 shadow-[0_0_22px_rgba(16,185,129,0.12)]"
-                : "border-red-400/40 bg-red-400/10 text-red-400 shadow-[0_0_22px_rgba(248,113,113,0.12)]"
-              : "border-white/[0.06] bg-white/[0.04] text-zinc-500"
+                ? "bg-emerald-400 text-black shadow-lg shadow-emerald-500/20"
+                : "bg-red-400 text-black shadow-lg shadow-red-500/20"
+              : "bg-white/5 text-zinc-400"
           }`}
         >
           {t === "Alacak" ? "Sana borçlu" : "Sen borçlusun"}
@@ -125,15 +124,14 @@ export default function AccountsPage() {
   );
 
   const mobileForm = (
-    <div className="relative overflow-hidden rounded-[2.5rem] border border-white/[0.06] bg-[#0c0c0c] p-5 shadow-2xl shadow-blue-500/[0.03]">
-      <div className="pointer-events-none absolute -right-16 -top-16 h-44 w-44 rounded-full bg-blue-500/10 blur-[70px]" />
+    <div className="rounded-[2rem] border border-white/10 bg-[#0b0b0f] p-4 shadow-2xl">
       <p className="text-xs font-semibold text-zinc-500">
         {type === "Alacak" ? "Kim sana borçlu?" : "Sen kime borçlusun?"}
       </p>
 
       <input
         type="text"
-        className="relative mt-2 w-full rounded-2xl border border-white/[0.06] bg-black/50 px-4 py-4 text-sm font-semibold outline-none placeholder:text-zinc-700 transition focus:border-blue-400/40"
+        className="mt-2 w-full rounded-2xl border border-white/10 bg-black/40 px-4 py-4 text-sm font-semibold outline-none placeholder:text-zinc-600 focus:border-blue-400/40"
         placeholder={type === "Alacak" ? "Müşteri adı" : "Tedarikçi / kişi adı"}
         value={name}
         onChange={(e) => setName(e.target.value)}
@@ -156,7 +154,7 @@ export default function AccountsPage() {
           autoComplete="off"
           enterKeyHint="done"
           pattern="[0-9.,]*"
-          className="w-full bg-transparent text-5xl font-black tracking-[-0.06em] outline-none placeholder:text-zinc-800"
+          className="w-full bg-transparent text-4xl font-black tracking-tight outline-none placeholder:text-zinc-700"
           placeholder="0"
           value={amount}
           onChange={(e) => setAmount(e.target.value.replace(/[^0-9.,]/g, ""))}
@@ -181,7 +179,7 @@ export default function AccountsPage() {
         value={date}
         onChange={(e) => setDate(e.target.value || getTodayLocalDate())}
         style={{ colorScheme: "dark" }}
-        className="mt-1 w-full rounded-2xl border border-white/[0.06] bg-black/60 px-3 py-2.5 text-sm text-zinc-300 outline-none focus:border-blue-400/40"
+        className="mt-1 w-full rounded-xl border border-white/5 bg-black/60 px-3 py-2.5 text-sm text-zinc-300 outline-none focus:border-blue-400/40"
       />
 
       <div className="mt-3">
@@ -192,7 +190,7 @@ export default function AccountsPage() {
               initial={{ opacity: 0, scale: 0.96 }}
               animate={{ opacity: 1, scale: 1 }}
               exit={{ opacity: 0, scale: 0.96 }}
-              className="flex h-16 items-center justify-center rounded-3xl border border-emerald-400/30 bg-emerald-400/10 font-black text-emerald-400"
+              className="flex h-14 items-center justify-center rounded-2xl border border-emerald-400/30 bg-emerald-400/10 font-black text-emerald-400"
             >
               ✓ Kayıt oluşturuldu
             </motion.div>
@@ -201,12 +199,12 @@ export default function AccountsPage() {
               key="save"
               whileTap={formIsValid ? { scale: 0.96 } : undefined}
               onClick={handleAddAccount}
-              className={`h-16 w-full rounded-3xl text-sm font-black uppercase tracking-widest transition ${
+              className={`h-14 w-full rounded-2xl font-black transition ${
                 formIsValid
                   ? type === "Alacak"
                     ? "bg-emerald-400 text-black shadow-xl shadow-emerald-500/20"
                     : "bg-red-400 text-black shadow-xl shadow-red-500/20"
-                  : "bg-white/[0.04] text-zinc-500"
+                  : "bg-white/5 text-zinc-500"
               }`}
             >
               {formIsValid ? "Kaydı oluştur" : "Bilgileri doldur"}
@@ -233,7 +231,7 @@ export default function AccountsPage() {
           >
             <input
               type="text"
-              className="mt-3 w-full rounded-2xl border border-white/[0.06] bg-black/60 p-3 text-sm outline-none placeholder:text-zinc-600 focus:border-blue-400/40"
+              className="mt-3 w-full rounded-xl border border-white/5 bg-black/60 p-3 text-sm outline-none placeholder:text-zinc-600 focus:border-blue-400/40"
               placeholder="Açıklama"
               value={note}
               onChange={(e) => setNote(e.target.value)}
@@ -245,7 +243,7 @@ export default function AccountsPage() {
   );
 
   const desktopAddForm = (
-    <div className="space-y-3 rounded-[2rem] border border-white/[0.06] bg-[#0c0c0c] p-5">
+    <div className="space-y-3 rounded-[1.5rem] border border-white/10 bg-[#0b0b0f] p-4">
       <div className="flex gap-2">
         {(["Alacak", "Borç"] as const).map((t) => (
           <motion.button
@@ -257,7 +255,7 @@ export default function AccountsPage() {
                 ? t === "Alacak"
                   ? "bg-emerald-400 text-black"
                   : "bg-red-400 text-black"
-                : "bg-white/[0.04] text-zinc-400"
+                : "bg-white/5 text-zinc-400"
             }`}
           >
             {TAB_SHORT[t]}
@@ -266,7 +264,7 @@ export default function AccountsPage() {
       </div>
 
       <input
-        className="w-full rounded-2xl border border-white/[0.06] bg-black/60 p-3 text-sm outline-none transition placeholder:text-zinc-600 focus:border-blue-400/40"
+        className="w-full rounded-xl border border-white/5 bg-black/60 p-3 text-sm outline-none transition placeholder:text-zinc-600 focus:border-blue-400/40"
         placeholder={type === "Alacak" ? "Kim sana borçlu?" : "Sen kime borçlusun?"}
         value={name}
         onChange={(e) => setName(e.target.value)}
@@ -279,7 +277,7 @@ export default function AccountsPage() {
           autoComplete="off"
           enterKeyHint="done"
           pattern="[0-9.,]*"
-          className="relative z-10 w-full rounded-2xl border border-white/[0.06] bg-black/60 p-3 text-sm outline-none transition placeholder:text-zinc-600 focus:border-blue-400/40"
+          className="relative z-10 w-full rounded-xl border border-white/5 bg-black/60 p-3 text-sm outline-none transition placeholder:text-zinc-600 focus:border-blue-400/40"
           placeholder="0"
           value={amount}
           onChange={(e) => setAmount(e.target.value.replace(/[^0-9.,]/g, ""))}
@@ -301,11 +299,11 @@ export default function AccountsPage() {
         value={date}
         onChange={(e) => setDate(e.target.value || getTodayLocalDate())}
         style={{ colorScheme: "dark" }}
-        className="w-full rounded-2xl border border-white/[0.06] bg-black/60 px-3 py-2.5 text-sm text-zinc-300 outline-none transition focus:border-blue-400/40"
+        className="w-full rounded-xl border border-white/5 bg-black/60 px-3 py-2.5 text-sm text-zinc-300 outline-none transition focus:border-blue-400/40"
       />
 
       <input
-        className="w-full rounded-2xl border border-white/[0.06] bg-black/60 p-3 text-sm outline-none transition placeholder:text-zinc-600 focus:border-blue-400/40"
+        className="w-full rounded-xl border border-white/5 bg-black/60 p-3 text-sm outline-none transition placeholder:text-zinc-600 focus:border-blue-400/40"
         placeholder="Açıklama (opsiyonel)"
         value={note}
         onChange={(e) => setNote(e.target.value)}
@@ -333,12 +331,12 @@ export default function AccountsPage() {
           initial={{ opacity: 0, y: 8 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: i * 0.03 }}
-          className={`rounded-[1.75rem] border p-4 shadow-xl shadow-black/20 transition ${
+          className={`rounded-xl border p-3 transition ${
             item.paid
-              ? "border-white/[0.06] bg-[#0c0c0c] opacity-50"
+              ? "border-white/5 bg-[#0b0b0f] opacity-50"
               : activeTab === "Alacak"
-              ? "border-emerald-400/20 bg-[#0c0c0c]"
-              : "border-red-400/20 bg-[#0c0c0c]"
+              ? "border-emerald-400/20 bg-[#0b0b0f]"
+              : "border-red-400/20 bg-[#0b0b0f]"
           }`}
         >
           {editingId === item.id ? (
@@ -358,7 +356,7 @@ export default function AccountsPage() {
                         ? t === "Alacak"
                           ? "bg-emerald-400 text-black"
                           : "bg-red-400 text-black"
-                        : "bg-white/[0.04] text-zinc-400"
+                        : "bg-white/5 text-zinc-400"
                     }`}
                   >
                     {t}
@@ -368,7 +366,7 @@ export default function AccountsPage() {
 
               <input
                 type="text"
-                className="w-full rounded-2xl border border-white/[0.06] bg-black/60 p-3 text-sm outline-none placeholder:text-zinc-600 focus:border-blue-400/40"
+                className="w-full rounded-xl border border-white/5 bg-black/60 p-3 text-sm outline-none placeholder:text-zinc-600 focus:border-blue-400/40"
                 placeholder="Ad"
                 value={editName}
                 onChange={(e) => setEditName(e.target.value)}
@@ -395,12 +393,12 @@ export default function AccountsPage() {
                 value={editDate}
                 onChange={(e) => setEditDate(e.target.value || getTodayLocalDate())}
                 style={{ colorScheme: "dark" }}
-                className="w-full rounded-2xl border border-white/[0.06] bg-black/60 px-3 py-2.5 text-sm text-zinc-300 outline-none focus:border-blue-400/40"
+                className="w-full rounded-xl border border-white/5 bg-black/60 px-3 py-2.5 text-sm text-zinc-300 outline-none focus:border-blue-400/40"
               />
 
               <input
                 type="text"
-                className="w-full rounded-2xl border border-white/[0.06] bg-black/60 p-3 text-sm outline-none placeholder:text-zinc-600 focus:border-blue-400/40"
+                className="w-full rounded-xl border border-white/5 bg-black/60 p-3 text-sm outline-none placeholder:text-zinc-600 focus:border-blue-400/40"
                 placeholder="Açıklama"
                 value={editNote}
                 onChange={(e) => setEditNote(e.target.value)}
@@ -421,7 +419,7 @@ export default function AccountsPage() {
                 <button
                   type="button"
                   onClick={() => setEditingId(null)}
-                  className="flex-1 rounded-xl bg-white/[0.04] py-2.5 text-sm font-black text-zinc-400 active:scale-95"
+                  className="flex-1 rounded-xl bg-white/5 py-2.5 text-sm font-black text-zinc-400 active:scale-95"
                 >
                   Vazgeç
                 </button>
@@ -478,7 +476,7 @@ export default function AccountsPage() {
                     <button
                       type="button"
                       onClick={() => setConfirmDeleteAccountId(null)}
-                      className="rounded-lg bg-white/[0.04] px-3 py-1 text-[11px] font-semibold text-zinc-400 active:scale-95"
+                      className="rounded-lg bg-white/5 px-3 py-1 text-[11px] font-semibold text-zinc-400 active:scale-95"
                     >
                       Vazgeç
                     </button>
@@ -510,7 +508,7 @@ export default function AccountsPage() {
   );
 
   const emptyState = (
-    <div className="rounded-[1.5rem] border border-white/[0.06] bg-[#0c0c0c] p-6 text-center">
+    <div className="rounded-[1.5rem] border border-white/5 bg-[#0b0b0f] p-6 text-center">
       <p className="text-3xl">{activeTab === "Alacak" ? "🤝" : "📤"}</p>
       <p className="mt-2 text-sm font-semibold text-zinc-400">
         {activeTab === "Alacak" ? "Kimden alacağın yok" : "Kimseye borcun yok"}
@@ -522,7 +520,7 @@ export default function AccountsPage() {
   );
 
   const desktopTabSwitcher = (
-    <div className="flex gap-1.5 rounded-xl bg-white/[0.04] p-1">
+    <div className="flex gap-1.5 rounded-xl bg-white/5 p-1">
       {(["Alacak", "Borç"] as const).map((tab) => (
         <motion.button
           key={tab}
@@ -546,35 +544,22 @@ export default function AccountsPage() {
   );
 
   return (
-    <main className="min-h-dvh bg-[radial-gradient(circle_at_top_left,rgba(59,130,246,0.14),transparent_32%),radial-gradient(circle_at_top_right,rgba(16,185,129,0.08),transparent_28%),#050507] text-white">
+    <main className="min-h-dvh bg-[radial-gradient(circle_at_top_left,rgba(59,130,246,0.14),transparent_32%),radial-gradient(circle_at_top_right,rgba(16,185,129,0.08),transparent_28%),#07070a] text-white">
       {/* MOBILE APP VERSION */}
-      <div className="px-4 pb-32 pt-4 md:hidden">
-        <div className="mb-4 flex items-center justify-between">
-          <Link
-            href="/"
-            className="flex h-11 w-11 items-center justify-center rounded-2xl border border-white/[0.06] bg-white/[0.04] text-lg text-zinc-400"
-          >
-            ←
-          </Link>
-          <p className="text-xs font-black uppercase tracking-[0.22em] text-zinc-500">
-            Cari Takip
-          </p>
-          <div className="h-11 w-11" />
-        </div>
-
-        <div className="space-y-4">
-          <section className="overflow-hidden rounded-[2.5rem] border border-white/[0.06] bg-[#0c0c0c] p-5 shadow-2xl shadow-blue-500/[0.04]">
+      <div className="md:hidden px-4 pb-28 pt-3">
+        <div className="space-y-3">
+          <section className="rounded-[2rem] border border-white/10 bg-[#0b0b0f] p-4 shadow-2xl">
             <p className="text-[11px] font-semibold uppercase tracking-widest text-zinc-500">
               Cari takip
             </p>
             <div className="mt-3 grid grid-cols-2 gap-2">
-              <div className="rounded-[1.75rem] border border-emerald-400/20 bg-emerald-400/5 p-4 shadow-[0_0_24px_rgba(16,185,129,0.06)]">
+              <div className="rounded-2xl border border-emerald-400/20 bg-emerald-400/5 p-3">
                 <p className="text-[11px] text-zinc-500">Sana borçlu</p>
                 <p className="mt-1 text-xl font-black text-emerald-400">
                   {formatMoney(totalReceivable)} ₺
                 </p>
               </div>
-              <div className="rounded-[1.75rem] border border-red-400/20 bg-red-400/5 p-4 shadow-[0_0_24px_rgba(248,113,113,0.06)]">
+              <div className="rounded-2xl border border-red-400/20 bg-red-400/5 p-3">
                 <p className="text-[11px] text-zinc-500">Sen borçlusun</p>
                 <p className="mt-1 text-xl font-black text-red-400">
                   {formatMoney(totalPayable)} ₺
@@ -602,7 +587,7 @@ export default function AccountsPage() {
 
       {/* DESKTOP VERSION - ESKİ YAPI KORUNDU */}
       <div className="hidden pb-10 md:block">
-        <section className="relative mx-6 mt-6 hidden overflow-hidden rounded-[2.25rem] border border-white/[0.06] bg-gradient-to-br from-blue-950/60 via-zinc-950 to-black p-8 shadow-2xl md:block">
+        <section className="relative mx-6 mt-6 hidden overflow-hidden rounded-[2rem] border border-white/10 bg-gradient-to-br from-blue-950/60 via-zinc-950 to-black p-8 shadow-2xl md:block">
           <div className="absolute -right-20 -top-20 h-64 w-64 rounded-full bg-blue-500/20 blur-3xl" />
           <div className="relative flex flex-col gap-6 lg:flex-row lg:items-end lg:justify-between">
             <div>
