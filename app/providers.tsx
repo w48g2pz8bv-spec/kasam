@@ -1,5 +1,6 @@
 "use client";
 
+import { v4 as uuidv4 } from "uuid";
 import { createContext, useContext, useEffect, useState } from "react";
 import { supabase, BUSINESS_ID } from "./lib/supabase";
 import { getTodayLocalDate } from "./utils";
@@ -247,7 +248,7 @@ export function KasamProvider({ children }: { children: React.ReactNode }) {
   // -------------------------------------------------------------------------
 
       const addSale = (sale: Sale) => {
-        const tempId = crypto.randomUUID();
+        const tempId = uuidv4();
         setSales((prev) => [{ ...sale, id: tempId }, ...prev]);
 
         return;
@@ -279,7 +280,7 @@ export function KasamProvider({ children }: { children: React.ReactNode }) {
   };
 
       const addExpense = (expense: Expense) => {
-        const tempId = crypto.randomUUID();
+        const tempId = uuidv4();
         setExpenses((prev) => [{ ...expense, id: tempId }, ...prev]);
 
         return;
@@ -303,7 +304,7 @@ export function KasamProvider({ children }: { children: React.ReactNode }) {
   };
 
     const addAccount = (account: Account) => {
-      const tempId = crypto.randomUUID();
+      const tempId = uuidv4();
       setAccounts((prev) => [{ ...account, id: tempId }, ...prev]);
 
       return;
