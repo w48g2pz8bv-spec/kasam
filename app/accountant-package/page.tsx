@@ -395,16 +395,21 @@ export default function AccountantPackagePage() {
               <button
                 type="button"
                 onClick={handlePrintReport}
-                className="h-14 w-full rounded-3xl border border-white/[0.08] bg-white text-sm font-black uppercase tracking-widest text-black shadow-[0_12px_34px_rgba(255,255,255,0.08)] active:scale-95"
+                className="..."
               >
-                Raporu Yazdır / PDF
+                PDF Kaydet
               </button>
+
+              <p className="text-center text-xs leading-5 text-zinc-500">
+                PDF’i kaydettikten sonra WhatsApp’ta dosya olarak ekleyebilirsin.
+              </p>
+
               <button
                 type="button"
                 onClick={handleWhatsAppShare}
-                className="h-14 w-full rounded-3xl border border-green-400/20 bg-green-400/10 text-sm font-black uppercase tracking-widest text-green-300 active:scale-95"
+                className="..."
               >
-                WhatsApp ile Gönder
+                WhatsApp Özeti Aç
               </button>
             </div>
           </section>
@@ -519,7 +524,7 @@ export default function AccountantPackagePage() {
                   onClick={handleWhatsAppShare}
                   className="rounded-3xl border border-green-400/20 bg-green-400/10 px-6 py-5 text-sm font-black uppercase tracking-widest text-green-300 transition hover:bg-green-400/15 active:scale-95"
                 >
-                  WhatsApp ile Gönder
+                  WhatsApp ile Gönder 
                 </button>
               </div>
             </div>
@@ -766,3 +771,32 @@ function MiniStat({
     </div>
   );
 }
+// PDF Export Fonksiyonu
+const handlePrintReport = () => {
+  const printContents = document.getElementById("printable-report");
+  if (!printContents) return;
+
+  const printWindow = window.open("", "_blank");
+  if (!printWindow) return;
+
+  printWindow.document.write(`
+    <html>
+      <head>
+        <title>Kasam Rapor</title>
+        <style>
+          body { font-family: sans-serif; background: #fff; color: #000; }
+          table { border-collapse: collapse; width: 100%; margin-top: 20px; }
+          th, td { border: 1px solid #333; padding: 8px; text-align: left; }
+          th { background: #f2f2f2; }
+          h1 { text-align: center; margin-top: 10px; }
+        </style>
+      </head>
+      <body>
+        ${printContents.innerHTML}
+      </body>
+    </html>
+  `);
+  printWindow.document.close();
+  printWindow.focus();
+  printWindow.print();
+};
