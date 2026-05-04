@@ -189,7 +189,59 @@ export default function AccountantPackagePage() {
               <p className="mt-2 text-xl font-black text-black">{monthlyRecordCount} kayıt</p>
             </div>
           </div>
+          <div className="mt-10">
+            <h2 className="text-sm font-black uppercase tracking-widest text-black">
+              Satış Hareketleri
+            </h2>
 
+            <table className="mt-4 w-full border border-black text-xs">
+              <thead>
+                <tr className="border-b border-black">
+                  <th className="p-2 text-left">Tarih</th>
+                  <th className="p-2 text-left">Tip</th>
+                  <th className="p-2 text-left">Not</th>
+                  <th className="p-2 text-right">Tutar</th>
+                </tr>
+              </thead>
+              <tbody>
+                {monthlySales.map((s, i) => (
+                  <tr key={i} className="border-b border-black/10">
+                    <td className="p-2">{s.date}</td>
+                    <td className="p-2">{s.type}</td>
+                    <td className="p-2">{s.note || "-"}</td>
+                    <td className="p-2 text-right">+{formatMoney(s.amount)} ₺</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+
+          <div className="mt-10">
+            <h2 className="text-sm font-black uppercase tracking-widest text-black">
+              Gider Hareketleri
+            </h2>
+
+            <table className="mt-4 w-full border border-black text-xs">
+              <thead>
+                <tr className="border-b border-black">
+                  <th className="p-2 text-left">Tarih</th>
+                  <th className="p-2 text-left">Kategori</th>
+                  <th className="p-2 text-left">Not</th>
+                  <th className="p-2 text-right">Tutar</th>
+                </tr>
+              </thead>
+              <tbody>
+                {monthlyExpenses.map((e, i) => (
+                  <tr key={i} className="border-b border-black/10">
+                    <td className="p-2">{e.date}</td>
+                    <td className="p-2">{e.category}</td>
+                    <td className="p-2">{e.note || "-"}</td>
+                    <td className="p-2 text-right">-{formatMoney(e.amount)} ₺</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
           <p className="mt-8 border-t border-black pt-4 text-xs text-black/60">
             Kasam — Yerel işletmeler için işletme kontrol sistemi.
           </p>
