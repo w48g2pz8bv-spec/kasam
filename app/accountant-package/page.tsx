@@ -1,4 +1,4 @@
- "use client";
+  "use client";
 
 import Link from "next/link";
 import { useState } from "react";
@@ -12,6 +12,14 @@ export default function AccountantPackagePage() {
 
   const monthlySales = sales.filter((s) => isCurrentMonth(s.date));
   const monthlyExpenses = expenses.filter((e) => isCurrentMonth(e.date));
+
+  const reportSales = [...monthlySales].sort(
+    (a, b) => new Date(a.date).getTime() - new Date(b.date).getTime()
+  );
+
+  const reportExpenses = [...monthlyExpenses].sort(
+    (a, b) => new Date(a.date).getTime() - new Date(b.date).getTime()
+  );
 
   const totalSales = monthlySales.reduce((total, s) => total + s.amount, 0);
   const totalExpenses = monthlyExpenses.reduce(
@@ -126,14 +134,24 @@ export default function AccountantPackagePage() {
     <main className="min-h-dvh bg-[radial-gradient(circle_at_top_left,rgba(245,158,11,0.14),transparent_32%),radial-gradient(circle_at_top_right,rgba(16,185,129,0.08),transparent_28%),#050507] text-white">
       <section id="printable-report" className="hidden print:block print:bg-white print:p-8 print:text-black">
         <div className="mx-auto max-w-4xl">
-          <div className="border-b border-black pb-5">
-            <p className="text-xs font-bold uppercase tracking-[0.25em] text-black">
-              Kasam Mali Rapor
-            </p>
-            <h1 className="mt-2 text-3xl font-black text-black">Ay Sonu Özeti</h1>
-            <p className="mt-1 text-sm text-black/60">
-              Bu rapor Kasam uygulamasındaki aylık satış, gider ve cari kayıtlarından otomatik oluşturuldu.
-            </p>
+          <div className="border-b-2 border-black pb-5">
+            <div className="flex items-start justify-between gap-6">
+              <div>
+                <p className="text-xs font-black uppercase tracking-[0.28em] text-black">
+                  Kasam Mali Rapor
+                </p>
+                <h1 className="mt-2 text-4xl font-black tracking-tight text-black">
+                  Ay Sonu Özeti
+                </h1>
+                <p className="mt-2 max-w-2xl text-sm leading-5 text-black/60">
+                  Bu rapor Kasam uygulamasındaki aylık satış, gider ve cari kayıtlarından otomatik oluşturuldu.
+                </p>
+              </div>
+              <div className="text-right text-xs text-black/60">
+                <p className="font-bold text-black">Rapor Tarihi</p>
+                <p>{formatReportDate(getTodayForReport())}</p>
+              </div>
+            </div>
           </div>
 
           <div className="mt-6 grid grid-cols-3 gap-4">
@@ -189,59 +207,91 @@ export default function AccountantPackagePage() {
               <p className="mt-2 text-xl font-black text-black">{monthlyRecordCount} kayıt</p>
             </div>
           </div>
-          <div className="mt-10">
-            <h2 className="text-sm font-black uppercase tracking-widest text-black">
-              Satış Hareketleri
-            </h2>
 
-            <table className="mt-4 w-full border border-black text-xs">
+          <section className="mt-10 print:break-before-page">
+            <div className="flex items-end justify-between border-b-2 border-black pb-2">
+              <h2 className="text-sm font-black uppercase tracking-widest text-black">
+                Satış Hareketleri
+              </h2>
+              <p className="text-xs font-bold text-black/60">
+                {reportSales.length} kayıt · {formatMoney(totalSales)} ₺
+              </p>
+            </div>
+
+            <table className="report-table mt-4 w-full border-2 border-black text-xs">
               <thead>
-                <tr className="border-b border-black">
-                  <th className="p-2 text-left">Tarih</th>
-                  <th className="p-2 text-left">Tip</th>
+                <tr>
+                  <th className="w-[18%] p-2 text-left">Tarih</th>
+                  <th className="w-[18%] p-2 text-left">Tip</th>
                   <th className="p-2 text-left">Not</th>
-                  <th className="p-2 text-right">Tutar</th>
+                  <th className="w-[24%] p-2 text-right">Tutar</th>
                 </tr>
               </thead>
               <tbody>
-                {monthlySales.map((s, i) => (
-                  <tr key={i} className="border-b border-black/10">
-                    <td className="p-2">{s.date}</td>
-                    <td className="p-2">{s.type}</td>
-                    <td className="p-2">{s.note || "-"}</td>
-                    <td className="p-2 text-right">+{formatMoney(s.amount)} ₺</td>
+                {reportSales.length === 0 ? (
+                  <tr>
+                    <td className="p-3 text-black/60" colSpan={4}>
+                      Bu ay satış kaydı bulunmuyor.
+                    </td>
                   </tr>
-                ))}
+                ) : (
+                  reportSales.map((s, i) => (
+                    <tr key={s.id ?? i}>
+                      <td className="p-2">{formatReportDate(s.date)}</td>
+                      <td className="p-2 font-bold">{s.type}</td>
+                      <td className="p-2">{s.note || "-"}</td>
+                      <td className="p-2 text-right font-black">
+                        +{formatMoney(s.amount)} ₺
+                      </td>
+                    </tr>
+                  ))
+                )}
               </tbody>
             </table>
-          </div>
+          </section>
 
-          <div className="mt-10">
-            <h2 className="text-sm font-black uppercase tracking-widest text-black">
-              Gider Hareketleri
-            </h2>
+          <section className="mt-10 print:break-before-page">
+            <div className="flex items-end justify-between border-b-2 border-black pb-2">
+              <h2 className="text-sm font-black uppercase tracking-widest text-black">
+                Gider Hareketleri
+              </h2>
+              <p className="text-xs font-bold text-black/60">
+                {reportExpenses.length} kayıt · {formatMoney(totalExpenses)} ₺
+              </p>
+            </div>
 
-            <table className="mt-4 w-full border border-black text-xs">
+            <table className="report-table mt-4 w-full border-2 border-black text-xs">
               <thead>
-                <tr className="border-b border-black">
-                  <th className="p-2 text-left">Tarih</th>
-                  <th className="p-2 text-left">Kategori</th>
+                <tr>
+                  <th className="w-[18%] p-2 text-left">Tarih</th>
+                  <th className="w-[20%] p-2 text-left">Kategori</th>
                   <th className="p-2 text-left">Not</th>
-                  <th className="p-2 text-right">Tutar</th>
+                  <th className="w-[24%] p-2 text-right">Tutar</th>
                 </tr>
               </thead>
               <tbody>
-                {monthlyExpenses.map((e, i) => (
-                  <tr key={i} className="border-b border-black/10">
-                    <td className="p-2">{e.date}</td>
-                    <td className="p-2">{e.category}</td>
-                    <td className="p-2">{e.note || "-"}</td>
-                    <td className="p-2 text-right">-{formatMoney(e.amount)} ₺</td>
+                {reportExpenses.length === 0 ? (
+                  <tr>
+                    <td className="p-3 text-black/60" colSpan={4}>
+                      Bu ay gider kaydı bulunmuyor.
+                    </td>
                   </tr>
-                ))}
+                ) : (
+                  reportExpenses.map((e, i) => (
+                    <tr key={e.id ?? i}>
+                      <td className="p-2">{formatReportDate(e.date)}</td>
+                      <td className="p-2 font-bold">{e.category}</td>
+                      <td className="p-2">{e.note || "-"}</td>
+                      <td className="p-2 text-right font-black">
+                        -{formatMoney(e.amount)} ₺
+                      </td>
+                    </tr>
+                  ))
+                )}
               </tbody>
             </table>
-          </div>
+          </section>
+
           <p className="mt-8 border-t border-black pt-4 text-xs text-black/60">
             Kasam — Yerel işletmeler için işletme kontrol sistemi.
           </p>
@@ -527,9 +577,40 @@ export default function AccountantPackagePage() {
             width: 100% !important;
           }
 
+          .report-table {
+            border-collapse: collapse !important;
+          }
+
+          .report-table thead {
+            display: table-header-group !important;
+          }
+
+          .report-table tr {
+            break-inside: avoid !important;
+            page-break-inside: avoid !important;
+          }
+
+          .report-table th {
+            border-bottom: 2px solid #000 !important;
+            background: #f2f2f2 !important;
+            color: #000 !important;
+            font-weight: 900 !important;
+            text-transform: uppercase !important;
+            letter-spacing: 0.08em !important;
+          }
+
+          .report-table td {
+            border-bottom: 1px solid rgba(0, 0, 0, 0.14) !important;
+            color: #000 !important;
+          }
+
+          .report-table tbody tr:nth-child(even) td {
+            background: #f8f8f8 !important;
+          }
+
           @page {
             size: A4;
-            margin: 14mm;
+            margin: 12mm;
           }
         }
       `}</style>
@@ -537,11 +618,29 @@ export default function AccountantPackagePage() {
   );
 }
 
+function getTodayForReport() {
+  return new Date().toISOString();
+}
+
+function formatReportDate(date: string) {
+  const parsed = new Date(date);
+
+  if (Number.isNaN(parsed.getTime())) {
+    return date;
+  }
+
+  return parsed.toLocaleDateString("tr-TR", {
+    day: "2-digit",
+    month: "2-digit",
+    year: "numeric",
+  });
+}
+
 function PrintRow({ label, value }: { label: string; value: number }) {
   return (
     <div className="flex items-center justify-between border-b border-black/10 py-2">
       <span className="text-sm text-black/70">{label}</span>
-      <strong className="text-sm text-black">{formatMoney(value)} ₺</strong>
+      <strong className="text-sm font-black text-black">{formatMoney(value)} ₺</strong>
     </div>
   );
 }
