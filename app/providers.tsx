@@ -159,7 +159,6 @@ export function KasamProvider({ children }: { children: React.ReactNode }) {
       !process.env.NEXT_PUBLIC_SUPABASE_URL ||
       !process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY
     ) {
-      console.warn("Supabase env yok, sync atlandı.");
       return;
     }
  
@@ -247,25 +246,34 @@ export function KasamProvider({ children }: { children: React.ReactNode }) {
   // ADD — optimistic, insert başarısızsa temp kayıt geri alınır
   // -------------------------------------------------------------------------
 
-  const addSale = (sale: Sale) => {
-    const tempId = crypto.randomUUID();
-    setSales((prev) => [{ ...sale, id: tempId }, ...prev]);
-    void (async () => {
+      const addSale = (sale: Sale) => {
+        const tempId = crypto.randomUUID();
+        setSales((prev) => [{ ...sale, id: tempId }, ...prev]);
+
+        return;
+
+        void (async () => {
+      if (
+        !process.env.NEXT_PUBLIC_SUPABASE_URL ||
+        !process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY
+      ) {
+        return;
+      }
+
       try {
         const { data, error } = await supabase
           .from("sales")
           .insert({ amount: sale.amount, type: sale.type, note: sale.note, date: sale.date, business_id: BUSINESS_ID })
           .select()
           .single();
+
         if (data) {
           setSales((prev) => prev.map((s) => (s.id === tempId ? rowToSale(data) : s)));
         } else {
           if (error) console.error("addSale failed:", error.message);
-          // Supabase fail olsa da local state'te tut — localStorage sync eder
         }
       } catch (err) {
         console.error("addSale network error:", err);
-        // Offline modda çalışmaya devam et
       }
     })();
   };

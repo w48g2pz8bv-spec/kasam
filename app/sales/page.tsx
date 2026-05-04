@@ -1,5 +1,6 @@
  "use client";
 
+import Link from "next/link";
 import { useState } from "react";
 import { useKasam } from "../providers";
 import { motion, AnimatePresence } from "framer-motion";
@@ -65,12 +66,14 @@ export default function SalesPage() {
 
   const handleAddSale = () => {
     if (!isValid) return;
+
     addSale({
       amount: parsedAmount,
       type,
       note,
       date: date || getTodayLocalDate(),
     });
+
     setAmount("");
     setType("Nakit");
     setNote("");
@@ -91,8 +94,10 @@ export default function SalesPage() {
 
   const handleSaveSaleEdit = () => {
     if (!editingId) return;
+
     const sale = sales.find((s) => s.id === editingId);
     if (!sale) return;
+
     const parsed = parseAmount(editAmount);
     if (parsed <= 0) return;
 
@@ -117,57 +122,55 @@ export default function SalesPage() {
     .slice(0, 20);
 
   const inputForm = (
-    <div className="relative z-10 overflow-hidden rounded-[2.25rem] border border-white/[0.06] bg-[#0b0b0f] p-4 shadow-2xl shadow-emerald-500/[0.03]">
-      <div className="pointer-events-none absolute -right-16 -top-16 h-40 w-40 rounded-full bg-emerald-400/10 blur-3xl" />
+    <div className="relative z-10 overflow-hidden rounded-[2.5rem] border border-white/[0.05] bg-[#0c0c0c] p-5 shadow-2xl shadow-emerald-500/[0.04]">
+      <div className="pointer-events-none absolute -right-14 -top-14 h-40 w-40 rounded-full bg-emerald-500/10 blur-[70px]" />
 
-      <p className="relative text-[10px] font-black uppercase tracking-[0.22em] text-zinc-500">
-        Satış tutarını yaz
+      <p className="relative text-center text-[10px] font-black uppercase tracking-[0.24em] text-zinc-500">
+        Satış Tutarı
       </p>
 
       <div
-        className={`relative mt-3 rounded-[1.75rem] border bg-black/50 px-4 py-5 transition ${
+        className={`relative mt-4 rounded-[2rem] border bg-black/50 px-4 py-6 transition ${
           isValid
-            ? "border-emerald-400/40 shadow-[0_0_28px_rgba(16,185,129,0.08)]"
+            ? "border-emerald-400/40 shadow-[0_0_32px_rgba(16,185,129,0.10)]"
             : "border-white/[0.06]"
         }`}
       >
-        <div className="flex items-end gap-3">
+        <div className="flex items-end justify-center gap-3">
           <input
             type="text"
             inputMode="decimal"
             autoComplete="off"
             enterKeyHint="done"
             pattern="[0-9.,]*"
-            className="w-full bg-transparent text-5xl font-black tracking-[-0.06em] text-white outline-none placeholder:text-zinc-800"
+            className="w-full bg-transparent text-center text-6xl font-black tracking-[-0.08em] text-white outline-none placeholder:text-zinc-800"
             placeholder="0"
             value={amount}
             onChange={(e) => setAmount(e.target.value.replace(/[^0-9.,]/g, ""))}
           />
-          <span className="pb-1 text-2xl font-black text-zinc-600">₺</span>
+          <span className="pb-2 text-3xl font-light text-zinc-600">₺</span>
         </div>
 
-        <div className="mt-3 flex items-center justify-between gap-3">
-          <p className="text-[11px] font-medium text-zinc-600">₺ otomatik eklenir</p>
-          {isValid && (
-            <p className="text-lg font-black tracking-tight text-emerald-400">
-              +{formatMoney(parsedAmount)} ₺
-            </p>
-          )}
-        </div>
+        {isValid && (
+          <p className="mt-3 text-center text-sm font-black text-emerald-400">
+            +{formatMoney(parsedAmount)} ₺
+          </p>
+        )}
       </div>
 
-      <div className="mt-3 grid grid-cols-3 gap-2">
+      <div className="mt-4 grid grid-cols-3 gap-2">
         {["Nakit", "Kart", "Havale"].map((t) => (
           <button
             key={t}
             type="button"
             onClick={() => setType(t)}
-            className={`rounded-2xl border py-3 text-xs font-black uppercase tracking-widest transition active:scale-95 ${
+            className={`flex flex-col items-center justify-center gap-2 rounded-3xl border py-4 text-[10px] font-black uppercase tracking-widest transition active:scale-95 ${
               type === t
-                ? "border-emerald-400/40 bg-emerald-400 text-black shadow-lg shadow-emerald-500/20"
-                : "border-white/[0.06] bg-white/[0.04] text-zinc-500"
+                ? "border-emerald-400/40 bg-emerald-400/10 text-emerald-400 shadow-[0_0_22px_rgba(16,185,129,0.12)]"
+                : "border-white/[0.05] bg-white/[0.035] text-zinc-500"
             }`}
           >
+            <span className="text-lg">{TYPE_ICON[t]}</span>
             {t}
           </button>
         ))}
@@ -184,34 +187,6 @@ export default function SalesPage() {
         style={{ colorScheme: "dark" }}
         className="mt-2 w-full rounded-2xl border border-white/[0.06] bg-black/50 px-4 py-3 text-sm font-semibold text-zinc-300 outline-none transition focus:border-emerald-400/40"
       />
-
-      <div className="mt-4">
-        <AnimatePresence mode="wait">
-          {saved ? (
-            <motion.div
-              key="saved"
-              initial={{ opacity: 0, scale: 0.96 }}
-              animate={{ opacity: 1, scale: 1 }}
-              exit={{ opacity: 0, scale: 0.96 }}
-              className="flex h-16 items-center justify-center rounded-3xl border border-emerald-400/30 bg-emerald-400/10 font-black text-emerald-400"
-            >
-              ✓ Satış kaydedildi
-            </motion.div>
-          ) : (
-            <button
-              type="button"
-              onClick={handleAddSale}
-              className={`h-16 w-full rounded-3xl text-sm font-black uppercase tracking-widest transition active:scale-95 ${
-                isValid
-                  ? "bg-emerald-400 text-black shadow-xl shadow-emerald-500/20"
-                  : "bg-white/[0.04] text-zinc-600"
-              }`}
-            >
-              {buttonLabel}
-            </button>
-          )}
-        </AnimatePresence>
-      </div>
 
       <button
         type="button"
@@ -239,6 +214,35 @@ export default function SalesPage() {
           </motion.div>
         )}
       </AnimatePresence>
+
+      <div className="mt-5">
+        <AnimatePresence mode="wait">
+          {saved ? (
+            <motion.div
+              key="saved"
+              initial={{ opacity: 0, scale: 0.96 }}
+              animate={{ opacity: 1, scale: 1 }}
+              exit={{ opacity: 0, scale: 0.96 }}
+              className="flex h-20 items-center justify-center rounded-3xl border border-emerald-400/30 bg-emerald-400/10 font-black text-emerald-400"
+            >
+              ✓ Satış kaydedildi
+            </motion.div>
+          ) : (
+            <button
+              type="button"
+              onClick={handleAddSale}
+              className={`flex h-20 w-full items-center justify-center gap-3 rounded-3xl text-sm font-black uppercase tracking-widest transition active:scale-[0.98] ${
+                isValid
+                  ? "bg-emerald-400 text-black shadow-[0_12px_34px_rgba(16,185,129,0.20)]"
+                  : "bg-white/[0.04] text-zinc-600"
+              }`}
+            >
+              <span>✓</span>
+              {buttonLabel}
+            </button>
+          )}
+        </AnimatePresence>
+      </div>
     </div>
   );
 
@@ -273,7 +277,7 @@ export default function SalesPage() {
       {filterBar}
 
       {filteredSales.length === 0 && (
-        <div className="rounded-[2rem] border border-white/[0.06] bg-[#0b0b0f] p-7 text-center shadow-2xl shadow-black/20">
+        <div className="rounded-[2rem] border border-white/[0.06] bg-[#0c0c0c] p-7 text-center shadow-2xl shadow-black/20">
           <p className="text-3xl">💰</p>
           <p className="mt-3 text-sm font-bold text-zinc-400">
             {filter === "today"
@@ -297,7 +301,7 @@ export default function SalesPage() {
             initial={{ opacity: 0, y: 8 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: i * 0.03 }}
-            className="rounded-[1.5rem] border border-white/[0.06] bg-[#0b0b0f] p-4 shadow-xl shadow-black/20"
+            className="rounded-[1.5rem] border border-white/[0.06] bg-[#0c0c0c] p-4 shadow-xl shadow-black/20"
           >
             {editingId === sale.id ? (
               <div className="space-y-3">
@@ -305,21 +309,17 @@ export default function SalesPage() {
                   Satışı düzelt
                 </p>
 
-                <div className="rounded-2xl border border-white/[0.06] bg-black/50 px-4 py-4">
-                  <input
-                    type="text"
-                    inputMode="decimal"
-                    autoComplete="off"
-                    enterKeyHint="done"
-                    pattern="[0-9.,]*"
-                    className="w-full bg-transparent text-3xl font-black tracking-tight outline-none placeholder:text-zinc-700"
-                    placeholder="0"
-                    value={editAmount}
-                    onChange={(e) =>
-                      setEditAmount(e.target.value.replace(/[^0-9.,]/g, ""))
-                    }
-                  />
-                </div>
+                <input
+                  type="text"
+                  inputMode="decimal"
+                  autoComplete="off"
+                  enterKeyHint="done"
+                  pattern="[0-9.,]*"
+                  className="w-full rounded-2xl border border-white/[0.06] bg-black/50 px-4 py-4 text-3xl font-black outline-none placeholder:text-zinc-700"
+                  placeholder="0"
+                  value={editAmount}
+                  onChange={(e) => setEditAmount(e.target.value.replace(/[^0-9.,]/g, ""))}
+                />
 
                 <div className="grid grid-cols-3 gap-2">
                   {["Nakit", "Kart", "Havale"].map((t) => (
@@ -444,8 +444,21 @@ export default function SalesPage() {
   return (
     <main className="min-h-dvh bg-[radial-gradient(circle_at_top_left,rgba(16,185,129,0.16),transparent_32%),radial-gradient(circle_at_top_right,rgba(34,197,94,0.08),transparent_28%),#050507] text-white">
       <div className="px-4 pb-32 pt-4 md:hidden">
+        <div className="mb-4 flex items-center justify-between">
+          <Link
+            href="/"
+            className="flex h-11 w-11 items-center justify-center rounded-2xl border border-white/[0.06] bg-white/[0.04] text-lg text-zinc-400"
+          >
+            ←
+          </Link>
+          <p className="text-xs font-black uppercase tracking-[0.22em] text-zinc-500">
+            Yeni Satış
+          </p>
+          <div className="h-11 w-11" />
+        </div>
+
         <div className="space-y-4">
-          <section className="overflow-hidden rounded-[2.25rem] border border-emerald-400/20 bg-[#0b0b0f] p-5 shadow-2xl shadow-emerald-500/[0.04]">
+          <section className="overflow-hidden rounded-[2.25rem] border border-emerald-400/20 bg-[#0c0c0c] p-5 shadow-2xl shadow-emerald-500/[0.04]">
             <div className="flex items-start justify-between gap-3">
               <div>
                 <p className="text-[10px] font-black uppercase tracking-[0.22em] text-zinc-500">
@@ -481,7 +494,7 @@ export default function SalesPage() {
                 Her satışı anında kaydet.
               </h2>
             </div>
-            <div className="shrink-0 rounded-3xl border border-white/10 bg-[#0b0b0f] p-5">
+            <div className="shrink-0 rounded-3xl border border-white/10 bg-[#0c0c0c] p-5">
               <p className="text-sm text-zinc-400">Bugünkü satış</p>
               <p className="mt-2 text-4xl font-black text-emerald-300">
                 {formatMoney(totalSales)} ₺
