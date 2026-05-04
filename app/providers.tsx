@@ -302,10 +302,13 @@ export function KasamProvider({ children }: { children: React.ReactNode }) {
     })();
   };
 
-  const addAccount = (account: Account) => {
-    const tempId = crypto.randomUUID();
-    setAccounts((prev) => [{ ...account, id: tempId }, ...prev]);
-    void (async () => {
+    const addAccount = (account: Account) => {
+      const tempId = crypto.randomUUID();
+      setAccounts((prev) => [{ ...account, id: tempId }, ...prev]);
+
+      return;
+
+      void (async () => {
       try {
         const { data, error } = await supabase
           .from("accounts")
