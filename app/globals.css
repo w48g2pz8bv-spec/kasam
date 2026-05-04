@@ -1,19 +1,46 @@
-@import "tailwindcss";
+ @import "tailwindcss";
 
+/* 1. KATMAN: TEMEL TASARIM DİLİ */
 :root {
-  --background: #07070a;
-  --foreground: #ededed;
+  --background: #050505; /* Derin siyah, ucuz durmayan ton */
+  --foreground: #f4f4f5;
+  --accent-emerald: #10b981;
+  --accent-rose: #f43f5e;
 }
 
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+/* 2. KATMAN: TİPOGRAFİ VE FONT */
+@layer base {
+  body {
+    @apply bg-[#050505] text-zinc-100 antialiased;
+    /* Rakamların premium durması için monospaced font desteği */
+    font-feature-settings: "cv02", "cv03", "cv04", "tnum";
+  }
 }
 
-body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+/* 3. KATMAN: ÖZEL PREMIUM BİLEŞENLER */
+@layer components {
+  /* Bento Grid Kartları İçin İnce Parlama */
+  .premium-card {
+    @apply rounded-[2.5rem] bg-[#0c0c0c] border border-white/[0.03] 
+           shadow-[0_20px_50px_rgba(0,0,0,0.5)] transition-all duration-300;
+  }
+
+  /* Butonlar İçin Apple Tarzı Hover Efekti */
+  .premium-button-emerald {
+    @apply bg-[#10b981] text-black font-black uppercase tracking-widest 
+           shadow-[0_10px_30px_rgba(16,185,129,0.15)] hover:scale-[1.02] active:scale-[0.98];
+  }
+
+  /* Rakamlar İçin "Finance-Ready" Font */
+  .font-mono-premium {
+    font-family: 'Geist Mono', 'JetBrains Mono', monospace;
+    @apply tracking-tighter;
+  }
+}
+
+/* 4. KATMAN: MOBİL ÖNCELİKLİ DOKUNUŞLAR */
+@media (max-width: 768px) {
+  .premium-card {
+    @apply rounded-[2rem] p-6;
+  }
 }
