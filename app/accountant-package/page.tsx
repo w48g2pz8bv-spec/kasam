@@ -1,4 +1,4 @@
-"use client";
+ "use client";
 
 import Link from "next/link";
 import { useState } from "react";
@@ -74,6 +74,23 @@ export default function AccountantPackagePage() {
     setPackageReady(true);
   };
 
+  const handlePrintReport = () => {
+    window.print();
+  };
+
+  const handleWhatsAppShare = () => {
+    const text =
+      `📊 Kasam Ay Sonu Mali Özeti\n\n` +
+      `💰 Bu ay gelir: ${formatMoney(totalSales)} ₺\n` +
+      `📉 Bu ay gider: ${formatMoney(totalExpenses)} ₺\n` +
+      `⚖️ Net durum: ${formatMoney(net)} ₺\n` +
+      `🟢 Açık alacak: ${formatMoney(openReceivable)} ₺\n` +
+      `🔴 Açık borç: ${formatMoney(openPayable)} ₺\n\n` +
+      `Bu rapor Kasam üzerinden oluşturuldu.`;
+
+    window.open(`https://wa.me/?text=${encodeURIComponent(text)}`, "_blank");
+  };
+
   const successBox = packageReady ? (
     clipboardFailed ? (
       <div className="rounded-2xl border border-amber-400/30 bg-amber-400/10 p-4">
@@ -107,6 +124,78 @@ export default function AccountantPackagePage() {
 
   return (
     <main className="min-h-dvh bg-[radial-gradient(circle_at_top_left,rgba(245,158,11,0.14),transparent_32%),radial-gradient(circle_at_top_right,rgba(16,185,129,0.08),transparent_28%),#050507] text-white">
+      <section id="printable-report" className="hidden print:block print:bg-white print:p-8 print:text-black">
+        <div className="mx-auto max-w-4xl">
+          <div className="border-b border-black pb-5">
+            <p className="text-xs font-bold uppercase tracking-[0.25em] text-black">
+              Kasam Mali Rapor
+            </p>
+            <h1 className="mt-2 text-3xl font-black text-black">Ay Sonu Özeti</h1>
+            <p className="mt-1 text-sm text-black/60">
+              Bu rapor Kasam uygulamasındaki aylık satış, gider ve cari kayıtlarından otomatik oluşturuldu.
+            </p>
+          </div>
+
+          <div className="mt-6 grid grid-cols-3 gap-4">
+            <div className="border border-black p-4">
+              <p className="text-xs font-bold uppercase text-black/60">Bu ay gelir</p>
+              <p className="mt-2 text-2xl font-black text-black">{formatMoney(totalSales)} ₺</p>
+            </div>
+            <div className="border border-black p-4">
+              <p className="text-xs font-bold uppercase text-black/60">Bu ay gider</p>
+              <p className="mt-2 text-2xl font-black text-black">{formatMoney(totalExpenses)} ₺</p>
+            </div>
+            <div className="border border-black p-4">
+              <p className="text-xs font-bold uppercase text-black/60">Net durum</p>
+              <p className="mt-2 text-2xl font-black text-black">{formatMoney(net)} ₺</p>
+            </div>
+          </div>
+
+          <div className="mt-6 grid grid-cols-2 gap-4">
+            <div className="border border-black p-4">
+              <h2 className="text-sm font-black uppercase tracking-widest text-black">Ödeme tipi kırılımı</h2>
+              <div className="mt-4 space-y-2">
+                <PrintRow label="Nakit" value={cash} />
+                <PrintRow label="Kart / POS" value={card} />
+                <PrintRow label="Havale" value={transfer} />
+                <PrintRow label="Diğer" value={other} />
+              </div>
+            </div>
+
+            <div className="border border-black p-4">
+              <h2 className="text-sm font-black uppercase tracking-widest text-black">Gider kırılımı</h2>
+              <div className="mt-4 space-y-2">
+                {expenseCategories.map((category) => {
+                  const total = monthlyExpenses
+                    .filter((expense) => expense.category === category)
+                    .reduce((sum, expense) => sum + expense.amount, 0);
+                  return <PrintRow key={category} label={category} value={total} />;
+                })}
+              </div>
+            </div>
+          </div>
+
+          <div className="mt-6 grid grid-cols-3 gap-4">
+            <div className="border border-black p-4">
+              <p className="text-xs font-bold uppercase text-black/60">Açık alacak</p>
+              <p className="mt-2 text-xl font-black text-black">{formatMoney(openReceivable)} ₺</p>
+            </div>
+            <div className="border border-black p-4">
+              <p className="text-xs font-bold uppercase text-black/60">Açık borç</p>
+              <p className="mt-2 text-xl font-black text-black">{formatMoney(openPayable)} ₺</p>
+            </div>
+            <div className="border border-black p-4">
+              <p className="text-xs font-bold uppercase text-black/60">Bu ay kayıt</p>
+              <p className="mt-2 text-xl font-black text-black">{monthlyRecordCount} kayıt</p>
+            </div>
+          </div>
+
+          <p className="mt-8 border-t border-black pt-4 text-xs text-black/60">
+            Kasam — Yerel işletmeler için işletme kontrol sistemi.
+          </p>
+        </div>
+      </section>
+
       {/* MOBILE APP VERSION */}
       <div className="px-4 pb-32 pt-4 md:hidden">
         <div className="mb-4 flex items-center justify-between">
@@ -199,6 +288,23 @@ export default function AccountantPackagePage() {
             </div>
 
             {packageReady ? successBox : copyButton(true)}
+
+            <div className="mt-3 grid gap-2">
+              <button
+                type="button"
+                onClick={handlePrintReport}
+                className="h-14 w-full rounded-3xl border border-white/[0.08] bg-white text-sm font-black uppercase tracking-widest text-black shadow-[0_12px_34px_rgba(255,255,255,0.08)] active:scale-95"
+              >
+                Raporu Yazdır / PDF
+              </button>
+              <button
+                type="button"
+                onClick={handleWhatsAppShare}
+                className="h-14 w-full rounded-3xl border border-green-400/20 bg-green-400/10 text-sm font-black uppercase tracking-widest text-green-300 active:scale-95"
+              >
+                WhatsApp ile Gönder
+              </button>
+            </div>
           </section>
         </div>
       </div>
@@ -297,6 +403,23 @@ export default function AccountantPackagePage() {
               </div>
 
               {packageReady ? successBox : copyButton(false)}
+
+              <div className="mt-3 grid gap-3 sm:grid-cols-2">
+                <button
+                  type="button"
+                  onClick={handlePrintReport}
+                  className="rounded-3xl bg-white px-6 py-5 text-sm font-black uppercase tracking-widest text-black shadow-[0_12px_34px_rgba(255,255,255,0.08)] transition hover:bg-zinc-100 active:scale-95"
+                >
+                  Raporu Yazdır / PDF
+                </button>
+                <button
+                  type="button"
+                  onClick={handleWhatsAppShare}
+                  className="rounded-3xl border border-green-400/20 bg-green-400/10 px-6 py-5 text-sm font-black uppercase tracking-widest text-green-300 transition hover:bg-green-400/15 active:scale-95"
+                >
+                  WhatsApp ile Gönder
+                </button>
+              </div>
             </div>
 
             <div className="rounded-[2rem] border border-white/[0.06] bg-[#0c0c0c] p-6 shadow-xl shadow-black/20">
@@ -330,7 +453,44 @@ export default function AccountantPackagePage() {
           </section>
         </div>
       </div>
+      <style jsx global>{`
+        @media print {
+          body {
+            background: white !important;
+          }
+
+          body * {
+            visibility: hidden !important;
+          }
+
+          #printable-report,
+          #printable-report * {
+            visibility: visible !important;
+          }
+
+          #printable-report {
+            display: block !important;
+            position: absolute !important;
+            inset: 0 auto auto 0 !important;
+            width: 100% !important;
+          }
+
+          @page {
+            size: A4;
+            margin: 14mm;
+          }
+        }
+      `}</style>
     </main>
+  );
+}
+
+function PrintRow({ label, value }: { label: string; value: number }) {
+  return (
+    <div className="flex items-center justify-between border-b border-black/10 py-2">
+      <span className="text-sm text-black/70">{label}</span>
+      <strong className="text-sm text-black">{formatMoney(value)} ₺</strong>
+    </div>
   );
 }
 
