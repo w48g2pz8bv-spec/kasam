@@ -1,5 +1,6 @@
 "use client";
 
+import Link from "next/link";
 import { useState } from "react";
 import { useKasam } from "../providers";
 import { formatMoney, isCurrentMonth } from "../utils";
@@ -96,8 +97,8 @@ export default function AccountantPackagePage() {
       onClick={handleCopy}
       className={
         isMobile
-          ? "mt-4 h-14 w-full rounded-2xl bg-amber-300 font-black text-black shadow-lg shadow-amber-500/20 active:scale-95"
-          : "mt-6 w-full rounded-2xl bg-amber-300 px-6 py-4 font-black text-black shadow-lg shadow-amber-500/20 transition hover:bg-amber-200 active:scale-95"
+          ? "mt-5 h-16 w-full rounded-3xl bg-amber-300 text-sm font-black uppercase tracking-widest text-black shadow-[0_12px_34px_rgba(245,158,11,0.20)] active:scale-95"
+          : "mt-6 w-full rounded-3xl bg-amber-300 px-6 py-5 text-sm font-black uppercase tracking-widest text-black shadow-[0_12px_34px_rgba(245,158,11,0.20)] transition hover:bg-amber-200 active:scale-95"
       }
     >
       Özeti Kopyala
@@ -105,23 +106,37 @@ export default function AccountantPackagePage() {
   );
 
   return (
-    <main className="min-h-dvh bg-[radial-gradient(circle_at_top_left,rgba(245,158,11,0.14),transparent_32%),radial-gradient(circle_at_top_right,rgba(16,185,129,0.08),transparent_28%),#07070a] text-white">
+    <main className="min-h-dvh bg-[radial-gradient(circle_at_top_left,rgba(245,158,11,0.14),transparent_32%),radial-gradient(circle_at_top_right,rgba(16,185,129,0.08),transparent_28%),#050507] text-white">
       {/* MOBILE APP VERSION */}
-      <div className="md:hidden px-4 pb-28 pt-3">
-        <div className="space-y-3">
-          <section className="rounded-[2rem] border border-amber-400/20 bg-[#0b0b0f] p-4 shadow-2xl shadow-amber-500/5">
+      <div className="px-4 pb-32 pt-4 md:hidden">
+        <div className="mb-4 flex items-center justify-between">
+          <Link
+            href="/"
+            className="flex h-11 w-11 items-center justify-center rounded-2xl border border-white/[0.06] bg-white/[0.04] text-lg text-zinc-400"
+          >
+            ←
+          </Link>
+          <p className="text-xs font-black uppercase tracking-[0.22em] text-zinc-500">
+            Muhasebe Paketi
+          </p>
+          <div className="h-11 w-11" />
+        </div>
+
+        <div className="space-y-4">
+          <section className="relative overflow-hidden rounded-[2.5rem] border border-amber-400/20 bg-[#0c0c0c] p-5 shadow-2xl shadow-amber-500/[0.04]">
+            <div className="pointer-events-none absolute -right-16 -top-16 h-44 w-44 rounded-full bg-amber-400/10 blur-[70px]" />
             <p className="text-[11px] font-semibold uppercase tracking-widest text-zinc-500">
               Muhasebe paketi
             </p>
 
-            <h1 className="mt-2 text-3xl font-black tracking-tight">
+            <h1 className="relative mt-2 text-3xl font-black tracking-tight">
               Ay sonu özeti
             </h1>
 
-            <div className="mt-4 rounded-2xl border border-white/10 bg-black/40 p-4">
+            <div className="relative mt-4 rounded-[2rem] border border-white/[0.06] bg-black/50 p-5">
               <p className="text-[11px] text-zinc-500">Net durum</p>
               <p
-                className={`mt-1 text-3xl font-black ${
+                className={`mt-2 text-5xl font-black tracking-[-0.07em] ${
                   net >= 0 ? "text-emerald-300" : "text-red-300"
                 }`}
               >
@@ -131,7 +146,7 @@ export default function AccountantPackagePage() {
           </section>
 
           {monthlyRecordCount === 0 && (
-            <section className="rounded-[1.5rem] border border-amber-400/20 bg-[#0b0b0f] p-6 text-center">
+            <section className="rounded-[2.25rem] border border-amber-400/20 bg-[#0c0c0c] p-6 text-center">
               <p className="text-3xl">📦</p>
               <p className="mt-3 text-base font-black">Bu ay kayıt yok</p>
               <p className="mt-2 text-xs leading-5 text-zinc-500">
@@ -147,7 +162,7 @@ export default function AccountantPackagePage() {
             <MobileStat title="Açık borç" value={openPayable} color="text-red-300" />
           </section>
 
-          <section className="rounded-[1.5rem] border border-white/10 bg-[#0b0b0f] p-4">
+          <section className="rounded-[2.25rem] border border-white/[0.06] bg-[#0c0c0c] p-4">
             <h3 className="text-base font-black">Ödeme kırılımı</h3>
             <div className="mt-4 space-y-2">
               <Row label="Nakit" value={cash} tone="green" />
@@ -157,7 +172,7 @@ export default function AccountantPackagePage() {
             </div>
           </section>
 
-          <section className="rounded-[1.5rem] border border-white/10 bg-[#0b0b0f] p-4">
+          <section className="rounded-[2.25rem] border border-white/[0.06] bg-[#0c0c0c] p-4">
             <h3 className="text-base font-black">Gider kırılımı</h3>
             <div className="mt-4 space-y-2">
               {expenseCategories.map((category) => {
@@ -171,7 +186,7 @@ export default function AccountantPackagePage() {
             </div>
           </section>
 
-          <section className="rounded-[1.5rem] border border-amber-400/20 bg-[#0b0b0f] p-4">
+          <section className="rounded-[2.25rem] border border-amber-400/20 bg-[#0c0c0c] p-4">
             <h3 className="text-base font-black">Hazır özet</h3>
             <p className="mt-2 text-xs leading-5 text-zinc-500">
               Özeti kopyala, muhasebecine veya WhatsApp'a yapıştır.
@@ -190,7 +205,7 @@ export default function AccountantPackagePage() {
 
       {/* DESKTOP VERSION - ESKİ YAPI KORUNDU */}
       <div className="hidden pb-10 md:block">
-        <section className="relative mx-6 mt-6 hidden overflow-hidden rounded-[2rem] border border-white/10 bg-gradient-to-br from-amber-950/60 via-zinc-950 to-black p-8 shadow-2xl md:block">
+        <section className="relative mx-6 mt-6 hidden overflow-hidden rounded-[2.5rem] border border-white/[0.06] bg-gradient-to-br from-amber-950/60 via-zinc-950 to-black p-8 shadow-2xl md:block">
           <div className="absolute -right-20 -top-20 h-64 w-64 rounded-full bg-amber-400/20 blur-3xl" />
 
           <div className="relative flex flex-col gap-6 lg:flex-row lg:items-end lg:justify-between">
@@ -207,7 +222,7 @@ export default function AccountantPackagePage() {
               </p>
             </div>
 
-            <div className="shrink-0 rounded-3xl border border-white/10 bg-[#0b0b0f] p-5">
+            <div className="shrink-0 rounded-3xl border border-white/[0.06] bg-[#0c0c0c] p-5">
               <p className="text-sm text-zinc-400">Net durum</p>
               <p
                 className={`mt-2 text-4xl font-black ${
@@ -222,7 +237,7 @@ export default function AccountantPackagePage() {
 
         <div className="space-y-6 p-6">
           {monthlyRecordCount === 0 && (
-            <div className="rounded-[1.5rem] border border-amber-400/20 bg-[#0b0b0f] p-8 text-center">
+            <div className="rounded-[2.25rem] border border-amber-400/20 bg-[#0c0c0c] p-8 text-center">
               <p className="text-3xl">📦</p>
               <p className="mt-3 text-lg font-black">Bu ay kayıt yok</p>
               <p className="mt-2 text-sm text-zinc-500">
@@ -268,7 +283,7 @@ export default function AccountantPackagePage() {
           </section>
 
           <section className="grid gap-5 lg:grid-cols-[1.2fr_0.8fr]">
-            <div className="rounded-[1.5rem] border border-white/10 bg-[#0b0b0f] p-6 shadow-xl">
+            <div className="rounded-[2rem] border border-white/[0.06] bg-[#0c0c0c] p-6 shadow-xl shadow-black/20">
               <h3 className="text-xl font-bold">Muhasebeciye Hazır Özet</h3>
               <p className="mt-2 text-sm leading-6 text-zinc-500">
                 Özeti kopyala, muhasebecine veya WhatsApp'a yapıştır.
@@ -284,7 +299,7 @@ export default function AccountantPackagePage() {
               {packageReady ? successBox : copyButton(false)}
             </div>
 
-            <div className="rounded-[1.5rem] border border-white/10 bg-[#0b0b0f] p-6 shadow-xl">
+            <div className="rounded-[2rem] border border-white/[0.06] bg-[#0c0c0c] p-6 shadow-xl shadow-black/20">
               <h3 className="text-xl font-bold">Açık Durum</h3>
 
               <div className="mt-5 space-y-4">
@@ -329,9 +344,9 @@ function MobileStat({
   color: string;
 }) {
   return (
-    <div className="rounded-[1.5rem] border border-white/10 bg-[#0b0b0f] p-4 shadow-xl">
+    <div className="rounded-[2rem] border border-white/[0.06] bg-[#0c0c0c] p-4 shadow-xl shadow-black/20">
       <p className="text-xs text-zinc-500">{title}</p>
-      <p className={`mt-2 text-xl font-black ${color}`}>
+      <p className={`mt-2 text-2xl font-black tracking-[-0.04em] ${color}`}>
         {formatMoney(value)} ₺
       </p>
     </div>
@@ -353,7 +368,7 @@ function Card({
 
   return (
     <div
-      className={`rounded-[1.5rem] border bg-[#0b0b0f] p-6 shadow-xl ${border}`}
+      className={`rounded-[2rem] border bg-[#0c0c0c] p-6 shadow-xl shadow-black/20 ${border}`}
     >
       <p className="text-sm text-zinc-400">{title}</p>
       <h3 className={`mt-3 text-3xl font-black ${color}`}>
@@ -373,7 +388,7 @@ function Box({
   children: React.ReactNode;
 }) {
   return (
-    <div className="rounded-[1.5rem] border border-white/10 bg-[#0b0b0f] p-6 shadow-xl">
+    <div className="rounded-[2rem] border border-white/[0.06] bg-[#0c0c0c] p-6 shadow-xl shadow-black/20">
       <h3 className="text-xl font-bold">{title}</h3>
       <p className="mt-1 text-sm text-zinc-500">{subtitle}</p>
       <div className="mt-5 space-y-3">{children}</div>
@@ -399,7 +414,7 @@ function Row({
   };
 
   return (
-    <div className="flex items-center justify-between rounded-xl border border-white/5 bg-black/40 p-4">
+    <div className="flex items-center justify-between rounded-2xl border border-white/[0.06] bg-black/50 p-4">
       <span className="text-sm text-zinc-400">{label}</span>
       <strong className={`${colors[tone]} text-sm`}>
         {formatMoney(value)} ₺
@@ -410,7 +425,7 @@ function Row({
 
 function ChecklistItem({ text }: { text: string }) {
   return (
-    <div className="flex items-center gap-3 rounded-xl border border-white/5 bg-black/40 p-4 text-sm text-zinc-300">
+    <div className="flex items-center gap-3 rounded-2xl border border-white/[0.06] bg-black/50 p-4 text-sm text-zinc-300">
       <span className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-emerald-400 text-xs font-black text-black">
         ✓
       </span>
@@ -431,7 +446,7 @@ function MiniStat({
   suffix?: string;
 }) {
   return (
-    <div className="rounded-xl border border-white/5 bg-black/40 p-4">
+    <div className="rounded-2xl border border-white/[0.06] bg-black/50 p-4">
       <p className="text-sm text-zinc-500">{label}</p>
       <p className={`mt-2 text-2xl font-black ${color}`}>
         {formatMoney(value)}
