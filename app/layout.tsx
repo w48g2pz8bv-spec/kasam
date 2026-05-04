@@ -1,4 +1,4 @@
-import type { Metadata } from "next";
+ import type { Metadata } from "next";
 import "./globals.css";
 import { KasamProvider } from "./providers";
 import MobileNav from "./mobile/nav";
